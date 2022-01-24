@@ -26,7 +26,7 @@ function App() {
   const [formDate, setformDate] = useState(new Date()); 
   const [formDate1, setformDate1] = useState(new Date()); 
   const [formDate2, setformDate2] = useState(new Date());  
-
+  const [data3, setData3] = useState({});
   const [day, setDay] = useState(0);
 
   const convert = (s) => {
@@ -49,18 +49,6 @@ function App() {
   const label3 = [];
   const value3 = [];
 
-  function findDays(val) {
-    const days = {};
-    val.forEach((element) => {
-      const dat = element.schedule_time.split(" ");
-      if (dat[0] in days) {
-        days[dat[0]] += 1;
-      } else {
-        days[dat[0]] = 1;
-      }
-    });
-    return days;
-  }
   const hr = {
     "12am to 3am": 0,
     "3am to 6am": 0,
@@ -84,6 +72,18 @@ function App() {
     'Nine' : 0,
     'More then 10' : 0,
   }
+  function findDays(val) {
+    const days = {};
+    val.forEach((element) => {
+      const dat = element.schedule_time.split(" ");
+      if (dat[0] in days) {
+        days[dat[0]] += 1;
+      } else {
+        days[dat[0]] = 1;
+      }
+    });
+    return days;
+  }
   const days = findDays(orderFiltered);
   
   const DayOrderFiltered = orderFiltered.filter(
@@ -95,40 +95,64 @@ function App() {
     const hrs = ((time + 11) % 12) + 1;
     const suff = time >= 12 ? "pm" : "am";
 
-    if (suff === "am" && hrs >= 1 && hrs < 3) {
-      hr["12am to 3am"] += 1;
-    } 
-    else if (suff === "am" && hrs >= 3 && hrs < 6) {
-      hr["3am to 6am"] += 1;
-    } 
-    else if (suff === "am" && hrs >= 9 && hrs < 12) {
-      hr["9am to 12pm"] += 1;
-    } 
-    else if (suff === "pm" && hrs >= 9 && hrs < 12) {
-      hr["9pm to 12am"] += 1;
-    } 
-    else if (suff === "am" && hrs >= 6 && hrs < 9) {
-      hr["6am to 9am"] += 1;
-    }
-    else if (suff === "pm" && hrs >= 6 && hrs < 9) {
-      hr["6pm to 9pm"] += 1;
-    } 
-    else if (suff === "pm" && hrs === 12) {
-      hr["12pm to 3pm"] += 1;
-    } 
-    else if (suff === "pm" && hrs === 1) {
-      hr["12pm to 3pm"] += 1;
-    } 
-    else if (suff === "pm" && hrs === 2) {
-      hr["12pm to 3pm"] += 1;
-    } 
-    else if (suff === "pm" && hrs >= 3 && hrs < 6) {
-      hr["3pm to 6pm"] += 1;
-    } 
-    else if (suff === "am" && hrs === 12) {
-      hr["12am to 3am"] += 1;
-    } 
+    if (suff === "am" && hrs >= 1 && hrs < 3)       hr["12am to 3am"] += 1;
+    else if (suff === "am" && hrs >= 3 && hrs < 6)  hr["3am to 6am"] += 1;
+    else if (suff === "am" && hrs >= 9 && hrs < 12) hr["9am to 12pm"] += 1;
+    else if (suff === "pm" && hrs >= 9 && hrs < 12) hr["9pm to 12am"] += 1;
+    else if (suff === "am" && hrs >= 6 && hrs < 9)  hr["6am to 9am"] += 1;
+    else if (suff === "pm" && hrs >= 6 && hrs < 9)  hr["6pm to 9pm"] += 1;
+    else if (suff === "pm" && hrs === 12)           hr["12pm to 3pm"] += 1;
+    else if (suff === "pm" && hrs === 1)            hr["12pm to 3pm"] += 1;
+    else if (suff === "pm" && hrs === 2)            hr["12pm to 3pm"] += 1;
+    else if (suff === "pm" && hrs >= 3 && hrs < 6)  hr["3pm to 6pm"] += 1;
+    else if (suff === "am" && hrs === 12)           hr["12am to 3am"] += 1;
   }) ; 
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    var da = [];
+    if(formDate2>formDate1)
+    {
+      for(let i=formDate1;i<= formDate2;i = formDate1.getDate()+1){
+        da.push(convert(i));
+      }
+      var temp = [ 0,0,0,0,0,0,0,0,0,0,0];
+      for(let i=0;i<da.length;i++){
+        const priorDays = Orders.map( (order , idx ) => {
+          if(order.item_date == da[i])
+          {
+            const dat = order.schedule_time.split(" ");
+            var da1 = new Date(order.item_date);
+            var da2 = new Date(dat[0]);
+            var diff = (da1-da2)/86400000;
+            temp[diff]+=1;
+            if(diff>10)
+              temp[10]+=1;
+          }
+        });
+        var cnt=0;
+        for (let i in dayCount) {
+          label2.push(i);
+          dayCount[i] = temp[cnt++];
+          value2.push(dayCount[i]);
+        }
+      }
+    }
+    setData3({
+      labels: label3 ,
+      datasets: [
+        {
+          label: 'Prior days',
+          data: value3,
+          backgroundColor: 'rgba(238,175,0, 0.4)',
+          borderColor: 'rgba(238,175,0, 0.5)',
+          pointBorderColor: 'rgba(238,175,0, 0.7)',
+          borderWidth: 1,
+        },
+      ],
+    });
+  }
 
 
   for (let i in days) {
@@ -139,6 +163,7 @@ function App() {
     label2.push(i);
     value2.push(hr[i]);
   }
+  
 
   const data = {
     labels: label1,
@@ -165,21 +190,6 @@ function App() {
       },
     ],
   };
-
-
-  // const data3 = {
-  //   labels: label3 ,
-  //   datasets: [
-  //     {
-  //       label: 'Prior days',
-  //       data: value3,
-  //       backgroundColor: 'rgba(238,175,0, 0.4)',
-  //       borderColor: 'rgba(238,175,0, 0.5)',
-  //       pointBorderColor: 'rgba(238,175,0, 0.7)',
-  //       borderWidth: 1,
-  //     },
-  //   ],
-  // }
 
 
   return (
@@ -246,11 +256,11 @@ function App() {
           }}
         />
       </div>
-      <div className='form'>
+      {/* <div className='form'>
         <h3 className='head1' >From Date:</h3>
         <DatePicker
           closeOnScroll={true}
-          onChange={ (val) => setformDate1(val)}
+          onChange={ (val) => convert(setformDate1(val))}
           selected={formDate1}
           dateFormat={"dd-MM-yyyy"}
           className="date1"
@@ -258,15 +268,18 @@ function App() {
         <h3 className='head1' >To Date:</h3>
         <DatePicker
           closeOnScroll={true}
-          onChange={ (val) => setformDate2(val)}
+          onChange={ (val) => convert(setformDate2(val))}
           selected={formDate2}
           dateFormat={"dd-MM-yyyy"}
           className="date2"
         />
-      </div>
-      <div className='chart2'>
+        <button type="submit" value="Submit" onSubmit={handleSubmit}>
+          Submit
+        </button>
+      </div> */}
+      {/* <div className='chart2'> */}
         {/* <Pie data={data3} /> */}
-      </div>
+      {/* </div> */}
     </div>
     
   );
