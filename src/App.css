@@ -1,38 +1,65 @@
 .App {
   text-align: center;
+  margin: 30px 90px;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.head1{
+  color: #3b3a3a;
+  padding: 0px 10px;
+  width:"300px"
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.chart1{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  border: 1px solid rgb(19, 128, 143);
+  border-radius: 5px;
+  padding: 30px 30px; 
 }
-
-.App-link {
-  color: #61dafb;
+.form{
+  margin: 10px 0px;
+  border: 1px solid rgb(60, 175, 76);
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: #a1eed0;
+  display: flex;
+  align-items: center;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.date{
+  padding: 10px 50px;
+  margin: 10px 0px;
+  border-radius: 5px;
+  width: 300px;
+}
+.date1{
+  padding: 10px 50px;
+  margin: 10px 0px;
+  border-radius: 5px;
+  width:300px;
+}
+.date2{
+  padding: 10px 50px;
+  margin: 10px 0px;
+  border-radius: 5px;
+  width: 300px;
+}
+.heading{
+  margin: 10px 0px;
+  border: 1px solid rgb(60, 175, 76);
+  border-radius: 5px;
+  padding: 30px 30px;
+}
+.head3{
+  color: #3b3a3a;
+  margin: 10px 0px;
+  border: 1px solid rgb(60, 175, 76);
+  padding: 20px 20px;
+  border-radius: 5px;
+  background-color: #a1eed0;
+}
+.chart2{
+  margin: 10px 0px;
+  border: 1px solid rgb(60, 175, 76);
+  border-radius: 5px;
+  padding: 30px 30px;
 }
